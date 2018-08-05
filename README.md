@@ -9,7 +9,7 @@ You need to have NODE.js, NPM and Gulp installed on your computer.
 
 ### Workflow 
 
-Install dependancies:
+Install dependencies:
 
 ```
 npm install
