@@ -1,6 +1,6 @@
 ## Project Title
 
-Test Report Generator
+Test Report Generator. Please check [Live Preview](https://konstantp.github.io/).
 
 ### Prerequisites
 
