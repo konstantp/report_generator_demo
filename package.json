@@ -1,0 +1,46 @@
+{
+  "name": "aahatest",
+  "version": "1.0.0",
+  "description": "AaHa test report generator",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kostya P",
+  "license": "ISC",
+  "dependencies": {
+    "chart.js": "^2.7.2",
+    "moment": "^2.22.2",
+    "numeral": "^2.0.6",
+    "query-string": "^6.1.0",
+    "vue": "^2.5.17",
+    "vue-chartkick": "^0.4.0",
+    "vue-select": "^2.4.0",
+    "vue-sticky-directive": "0.0.6"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.1.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browser-sync": "^2.24.6",
+    "browserify": "^16.2.2",
+    "css-mqpacker": "^7.0.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-eslint": "^5.0.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-plumber": "^1.2.0",
+    "gulp-postcss": "^7.0.1",
+    "gulp-sass": "^4.0.1",
+    "gulp-uglify": "^3.0.1",
+    "gulp-util": "^3.0.8",
+    "gulp-watch": "^5.0.1",
+    "node-sass-glob": "^1.0.4",
+    "postcss-discard-comments": "^4.0.0",
+    "run-sequence": "^2.2.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}

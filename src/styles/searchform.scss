@@ -1,0 +1,192 @@
+.searchform {
+
+	&__fieldwrap {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin: 0 0 10px;
+		border-bottom: 1px solid $gray--bg;
+		padding: 0 0 9px;
+	}
+
+	&__label {
+		@extend .headline;
+		@extend .headline--secondary;
+		width: 17%;
+		margin: 0;
+	}
+
+	&__field {
+		width: 80%;
+		display: flex;
+
+		> .dropdown {
+			flex: 1;
+		}
+
+		&--filters {
+			display: block;
+		}
+	}
+
+	&__col {		
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		margin-right: 30px;
+
+		&:last-child {
+			margin-right: 0;			
+		}
+
+		input {
+			width: 55px;
+		}
+
+		.dropdown {
+			flex: 1;
+			margin-left: 20px;
+		}
+	}	
+
+	&__hint {		
+		@extend .headline;
+		@extend .headline--small;
+		display: block;
+		width: 100%;
+		margin-bottom: 10px;
+	}
+
+	input[type="text"], 
+	input[type="number"] {
+		border-radius: $border-radius;
+		border: 1px solid $blue;
+		height: 36px;
+		padding: 10px;
+		font-family: 'PT Sans';
+		text-transform: uppercase;
+		letter-spacing: 0.05em;	    
+		font-weight: normal;
+		font-size: 13px;	    		
+	}
+
+	select {
+		background: transparent;
+		border-radius: $border-radius;
+		border: 1px solid $blue;
+		height: 36px;	
+		font-family: 'PT Sans';
+		text-transform: uppercase;
+		letter-spacing: 0.05em;	    
+		font-weight: normal;
+		font-size: 13px;			
+	}
+
+	&__actions {
+		width: 100%;
+	    display: flex;
+	    align-items: flex-end;
+	    justify-content: flex-end;	
+
+	    .buttonbox {
+	    	margin-left: 20px;
+	    }		
+	}
+
+	.dropdown {
+		background: transparent;
+		border-radius: $border-radius;
+		border: 1px solid $blue;		
+	}
+}
+
+.filter-field {
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+
+
+	> * {
+		flex: 1;
+		margin-right: 20px;
+	}
+
+	.buttonbox--remove {
+		margin-right: 0;
+	}
+
+	select, 
+	input {
+		width: 100%;
+	}
+}
+
+.searchform .v-select {
+
+	input[type="search"], 
+	input[type="search"]:focus {
+		font-family: 'PT Sans';
+		text-transform: uppercase;
+		letter-spacing: 0.05em;	    
+		font-weight: normal;
+		font-size: 13px;			
+	}
+
+	.selected-tag {
+		color: $black;
+
+		font-family: 'PT Sans';
+		text-transform: uppercase;
+		letter-spacing: 0.05em;	    
+		font-weight: normal;
+		font-size: 13px;	
+		height: 27px;
+		padding: 1px 3px !important;	
+
+
+		&:hover {
+			background: $blue;
+			color: $white;
+
+			.close {
+				color: $white;
+			}
+		}
+	}
+
+	ul.dropdown-menu {
+		background-color: $gray--bg;
+		padding: 0;
+		margin: 0;
+		border: 0;
+		border-radius: $border-radius;
+
+		li {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			font-size: 12px;
+			line-height: 20px;
+			min-height: 20px;
+			display: block;
+			padding: 0;			
+			cursor: pointer;
+
+			&:hover {
+				background-color: $blue;
+
+				a {
+					color: $white;
+				}
+			}
+
+			a {
+				padding: 5px 15px;
+				margin: 0;
+				border: 0;
+				background: transparent;
+				color: $black;
+			}
+		}
+	}
+}

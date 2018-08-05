@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Test Report Generator</title>
+		<link rel="stylesheet" href="dist/styles/app.css" type="text/css">
+	</head>
+	<body>
+
+		<!-- Searchform Component Template -->
+		<script type="text/x-template" id="searchform-template">
+
+			<div class="contentbox">
+		    	<form @submit.prevent="handleSubmit" class="searchform">
+		    		
+		    		<div class="searchform__fieldwrap ">
+			    		
+				        <label class="searchform__label">Filter results by: </label>
+			        	<div class="searchform__field searchform__field--filters">
+
+				    		<div v-for="(filter, index) in filters">
+				    			<filter-field 
+				    			:key="index"
+				    			:index="index"
+				    			:filter="filter" 
+				    			:options="searchprops.options.filteroptions"
+				    			>
+				    			</filter-field>	
+				    		</div>
+
+				    		<button @click="addFilter()" type="button" class="buttonbox buttonbox--add">+ Add Filter</button>
+				    	</div>
+				    </div>
+
+		    		<div class="searchform__fieldwrap">
+			        	<label class="searchform__label">Specify fields: </label>
+			        	<div class="searchform__field">
+			        		<v-select name="fields[]" class="" multiple v-model="fields" :options="searchprops.options.fields" placeholder="Select from available options"></v-select>
+			        	</div>
+			        </div>
+			        
+			        <div class="searchform__fieldwrap">
+				        <label class="searchform__label">Specify metrics: </label>
+				        <div class="searchform__field">
+				        	<v-select name="metrics[]" class="" multiple v-model="metrics" :options="searchprops.options.metrics" placeholder="Select from available options"></v-select>	
+				        </div>
+				    </div>
+
+				    <div class="searchform__fieldwrap">
+				    	<label class="searchform__label">Specify Enclosures:</label>
+				    	<div class="searchform__field">
+			        		<v-select name="enclosures[]" class="" multiple v-model="enclosures" :options="searchprops.options.enclosures" placeholder="Select from available options"></v-select>	
+			        	</div>	
+			        </div>
+
+			        <div class="searchform__fieldwrap">
+				    	<label class="searchform__label">Set results limit:</label>
+				    	<div class="searchform__field">
+				        	<input type="number" v-model="limit" min="1" max="20">				        
+				        </div>
+				    </div>
+
+			        <div class="searchform__fieldwrap">
+			        	<label class="searchform__label">Specify dates and timeline interval:</label>
+	        	
+	        			<div class="searchform__field">
+
+		        			<div class="searchform__col">
+						        <span class="searchform__hint">Generate report for the past </span>
+						        <input type="number" v-model="periodduration" min="1" max="365">
+
+						        <v-select name="periodunit" class="" v-model="periodunit" :options="searchprops.options.periodunit" placeholder="Specify Period Unit"></v-select>	
+						    </div>
+
+						    <div class="searchform__col">
+						        <span class="searchform__hint">and group results by interval </span>					        
+						        <input type="number" v-model="interval" min="1" max="365">
+
+						        <v-select name="intervalunit" class="" v-model="intervalunit" :options="searchprops.options.intervalunit" placeholder="Specify Interval Unit"></v-select>
+						    </div>
+					    </div>
+				    </div>
+
+			        <div class="searchform__fieldwrap">
+			        	<label class="searchform__label">Breakdown results by: </label>
+			        	<div class="searchform__field">
+			        		<v-select name="breakdown[]" class="" multiple v-model="breakdown" :options="searchprops.options.breakdown" placeholder="Select from available options"></v-select>
+			        	</div>		
+			        </div>
+
+			        <div class="searchform__actions">
+				        <button @click="clearForm()" type="button" class="buttonbox buttonbox--secondary">Clear Form</button>		                
+
+				      	<input type="submit" value="Generate Report" class="buttonbox buttonbox--primary">
+			      	</div>
+			        
+		    	</form>		
+		    </div>
+		</script>	
+
+		<!-- Datebox Component Template -->
+		<script type="text/x-template" id="datebox-template">
+			<div class="datebox">
+				<div class="datebox__calendarwrap">
+					<div class="datebox__weekday">{{ date.weekday }}</div>
+					<div class="datebox__day">{{ date.day }}</div>
+					<div class="datebox__month">{{ date.month }}</div>	
+				</div>
+				<div class="datebox__year">{{ date.year }}</div>	
+			</div>
+		</script>
+
+		<!-- Filter Field Component Template -->
+		<script type="text/x-template" id="filter-field-template">
+			<div class="filter-field">			
+
+				<select :name="'filterfields[' + index + '][name]'" v-model="filter.slug" @change="changeFilter(index, filter.slug)">
+					<option v-for="(option, slug) in options" :value="slug" >	
+						{{ option.name }}	
+					</option>
+				</select>
+
+				<select :name="'filterfields[' + index + '][comparison]'" v-model="filter.comparison">
+					<option value="==">IS</option>
+					<option value="!=">IS NOT</option>
+				</select>
+				
+
+				<span v-if="options[filter.slug].type == 'text'">
+					
+					<input type="text" :name="'filterfields[' + index + '][value]'" v-model="filter.value" :placeholder="options[filter.slug].placeholder">							
+				</span>
+				<span v-else-if="options[filter.slug].type == 'select'">
+
+					<select :name="'filterfields[' + index + '][name]'" v-model="filter.value">
+						<option v-for="(option, index) in options[filter.slug].options"  :value="option.value">	
+							{{ option.label }}	
+						</option>
+					</select>
+
+				</span>
+
+				<button @click="removeFilter(index)" type="button" class="buttonbox buttonbox--remove">- Remove</button>
+			
+			</div>
+		</script>
+
+		<!-- Authorbox Component Template -->
+		<script type="text/x-template" id="authorbox-template">
+
+			<div class="authorbox" :class="[{'is-expanded': isExpanded}]">
+
+				<div class="authorbox__header">
+
+					<div class="authorbox__personal">
+						
+						<figure class="authorbox__avatar">
+							<a :href="author.personal.url" target="_blank" class="authorbox__url">
+								<img :src="author.personal.avatar">
+							</a>
+						</figure>
+
+						<h4 class="authorbox__name"><a :href="author.personal.url" target="_blank" class="authorbox__url">{{ author.personal.name }}</a></h4>
+
+						<a :href="author.personal.url" target="_blank" class="buttonbox buttonbox--secondary">Read Articles</a>							
+
+					</div>					
+
+					<div class="authorbox__quickstats">
+							
+						<div class="authorbox__quickstatscolumn">												
+							<div v-for="(metric, metricName) in author.stats.general.metrics">
+
+								<h5 class="headline headline--small">
+									<span v-if="metricName == 'bounce-rate'">Average {{ metricName.replace('-', ' ').toUpperCase() + ' ' + metric }}% </span>
+									<span v-else>Total {{ metricName.replace('-', ' ').toUpperCase() }} {{ metric | formatNumber }}</span>
+								</h5>														
+
+								<bar-chart :data="[['', metric]]" width="100%" height="16px" :colors="[ui.metriccolors[metricName]]" class="barchart"></bar-chart>
+
+							</div>
+						</div>
+					
+						<div class="authorbox__quickstatscolumn">	
+							<h5 class="headline headline--small">Top {{ author.stats.general.topreferrers_chart.length }} Referrers</h5>
+							<pie-chart :data=author.stats.general.topreferrers_chart legend="left" width="100%" height="130px"></pie-chart>	
+						</div>		
+
+						<div class="authorbox__actions">	
+							<button class="buttonbox buttonbox--primary authorbox__toggler" @click="toggleReport()">{{ togglerBtnText }}</button>
+						</div>									
+
+					</div>
+
+				</div>
+
+				<div class="authorbox__body">					
+
+					<div class="innerbox authorbox__timeline">
+						
+						<h3 class="headline headline--secondary">Timeline Metrics</h3>			
+
+						<line-chart :data="author.stats.dates.datechart" :colors="[...Object.values(ui.metriccolors)]" height="240px"/></line-chart>		 			
+					</div>
+
+					<div class="innerbox authorbox__datestable">	
+						
+						<h3 class="headline headline--secondary">Daily Report</h3>					
+
+						<table class="reporttable">
+							<thead>
+								<tr>
+									<th width="88">Date</th>
+									<th width="120">Articles</th>
+									<th width="430">Referrers</th>
+									<th width="238">Metrics</th>						
+								</tr>
+							</thead>
+
+							<tbody>
+
+								<tr v-for="(date, index) in author.stats.dates" class="singledate">									
+									<td sticky-container>
+										<div class="headbubble"  v-sticky sticky-offset="offset" sticky-side="top">
+											<div class="headbubble__inner">
+												<datebox :timestamp="date.key"></datebox>	
+											</div>
+										</div>						
+									</td>
+
+									<td colspan="3">
+										<table class="reporttable--summary articlestable">
+											<tbody v-if="date.articles.length">							
+
+												<tr v-for="(article, index) in date.articles">
+
+													<td width="160" class="article__title">
+														<div><span v-html="article.fields.title"></span></div>
+													</td>
+
+													<td width="458">
+														<div><pie-chart :data=article.topreferrers_chart legend="left" width="434px" height="130px"></pie-chart></div>
+													</td>																			
+													<td width="238">
+														<div>
+															<div v-for="(metric, metricName) in article.metrics">
+
+																<h5 class="headline headline--small">
+																	<span v-if="metricName == 'bounce-rate'">{{ metricName.replace('-', ' ').toUpperCase() + ' ' + metric }}% </span>
+																	<span v-else>{{ metricName.replace('-', ' ').toUpperCase() }} {{ metric | formatNumber }}</span>
+																</h5>														
+
+																<bar-chart :data="[['', metric]]" width="232px" height="16px" :colors="[ui.metriccolors[metricName]]" class="barchart"></bar-chart>
+															</div>													
+														</div>
+													</td>
+												</tr>
+											</tbody>
+											<tbody v-else><tr><td colspan="3"><div class="headline headline--secondary">There is no data for this time period.</div></td></tr></tbody>
+										</table>								
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>						
+
+					<div class="authorbox__actions">
+						<button class="buttonbox buttonbox--secondary " @click="exportReport()">Export to .CSV</button>
+
+						<button class="buttonbox buttonbox--secondary " @click="printReport()">Print Report</button>					
+						<button class="buttonbox buttonbox--primary authorbox__toggler" @click="toggleReport()">{{ togglerBtnText }}</button>
+					</div>											
+				</div>
+
+			</div>		
+
+		</script>
+
+
+		<div class="wrapper">	
+
+			<div :class="[{ appmounted: appmounted }]" id="reportsapp">
+
+				<h1 class="headline headline--intro">Test Report Generator</h1>				
+				
+				<searchform :searchprops="search"></searchform>
+
+				<div v-if="report.byAuthors.length">
+
+					<h2 class="headline headline--primary">Authors Report</h2>
+				
+					<authorbox v-for="(author, index) in report.byAuthors" 
+						:key="index"
+						:id="'author-' + author.personal.id"
+						:author="author"
+						:ui="ui"
+					></authorbox>	
+
+				</div>
+				<div v-else class="loader"> <h3 class="headline headline--secondary">Loading...</h3></div>
+
+				<div v-if="Object.keys(report.summary.metrics).length">
+					<h2 class="headline headline--primary">Summary</h2>
+					<div class="contentbox">
+						<table class="reporttable reporttable--summary">
+							<thead>
+								<tr>
+									<th v-for="(metric, metricName) in report.summary.metrics" :key="metricName">
+										<span v-if="metricName == 'bounce-rate'">Average </span>
+										<span v-else>Total </span>
+										{{ metricName.replace('-', ' ') }}
+									</th>								
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td v-for="(metric, metricName) in report.summary.metrics" :key="metricName">
+										<span v-if="metricName == 'bounce-rate'">{{ metric }}%</span>
+										<span v-else>{{ metric | formatNumber }} </span>
+									</td>
+								</tr>				
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div v-if="report.summary.topreferrers_chart.length">
+					<h2 class="headline headline--primary">Top Referrers</h2>		
+					<div class="contentbox">
+						<pie-chart :data=report.summary.topreferrers_chart legend="left" width="944px" height="520px"></pie-chart>
+					</div>
+				</div>
+
+			</div>
+
+		</div>		
+
+		<script type="text/javascript" src="dist/scripts/app.js"></script>
+	</body>
+</html>

@@ -1,0 +1,39 @@
+.maintext {
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+	color: $gray--text;
+}
+
+.headline {
+	color: $black;
+	font-family: 'PT Sans';
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin: 0 0 1em;
+
+	&--intro {
+		color: $blue;
+		text-align: center;
+		margin: 1em auto;
+	}
+
+	&--primary {
+	    font-weight: normal;
+	    font-size: 20px;
+	}
+
+	&--secondary {
+	    font-weight: bold;
+	    font-size: 13px;	
+
+	    .innerbox > & {
+	    	color: $blue;
+	    	font-size: 15px;
+	    }
+	}
+
+	&--small {
+		font-weight: normal;
+		font-size: 11px;
+		margin: 8px 0 0;
+	}	
+}

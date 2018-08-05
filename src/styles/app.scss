@@ -1,0 +1,120 @@
+@import 'fonts';
+@import 'variables';
+@import 'elements';
+@import 'typography';
+@import 'authorbox';
+@import 'datebox';
+@import 'searchform';
+
+body {
+	background: $gray--bg;
+	margin: 0;
+	padding: 0;
+}
+
+* { 
+	box-sizing: border-box;
+}
+
+.wrapper {
+	width: 96%;
+	max-width: 1024px;
+	margin: 0 auto;
+}
+
+#reportsapp {
+
+	&.appmounted {
+		
+	}
+}
+
+.loader {
+	background: url('../img/loader.gif') 50% 20% no-repeat;
+	min-height: 220px;
+	width: 100%;	
+
+	.headline {
+		text-align: center;
+	}
+}
+
+
+.article {
+	&__title {
+		@extend .headline;
+		@extend .headline--secondary;
+	    font-weight: normal;
+	    font-size: 11px;	
+	    padding-top: 12px;	
+	}
+}
+
+
+.articlestable {
+	border-bottom: 12px solid transparent;
+	min-height: 133px;
+	min-width: 848px;
+
+	tbody {
+		background: $white;
+		border-radius: $border-radius;	
+		width: 100%;
+	}
+
+	td > div {
+		padding: 12px;	
+	}	
+
+	.singledate:last-child & {
+		border-bottom: 0;
+	}
+}
+.reporttable {	
+	width: 100%;
+	text-align: left;	
+
+	thead {
+		text-transform: uppercase;
+		th {
+
+			@extend .headline;
+			@extend .headline--secondary;
+		}
+	}
+
+	tbody {
+		@extend .maintext;
+
+		td {
+			vertical-align: top;
+		}
+	}
+
+
+	&--summary {
+		table-layout: fixed;	
+	}
+
+	.headbubble {		
+
+		&__inner {
+			background: $white;
+			padding: 12px 12px 4px;
+			border-top-left-radius: $border-radius;
+			border-bottom-left-radius: $border-radius;
+			margin: 2px 0 0;	
+			position: relative;			
+
+			&:after {
+				background: $white;
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 100%;
+				width: 6px;
+				bottom: 0;
+			}
+		}
+	}
+}

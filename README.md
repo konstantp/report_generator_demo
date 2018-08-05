@@ -1,0 +1,33 @@
+## Project Title
+
+Test Report Generator
+
+### Prerequisites
+
+You need to have NODE.js, NPM and Gulp installed on your computer.
+
+
+### Workflow 
+
+Install dependancies:
+
+```
+npm install
+```
+
+To create production build run:
+
+```
+gulp production
+```
+
+For development  simply run:
+
+```
+gulp
+```
+
+
+## Built With
+
+* [Vue.js](https://vuejs.org/) - The Progressive JavaScript Framework

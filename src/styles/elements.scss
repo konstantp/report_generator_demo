@@ -1,0 +1,79 @@
+.buttonbox {
+	border: 2px solid transparent;
+    display: inline-block;       
+    text-transform: uppercase;
+    letter-spacing: .1em;
+	padding: 10px;
+	font: 9px/1 HurmeGeometricSans4-Bold;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: $border-radius;
+    transition-duration: 0.2s;    
+    text-decoration: none;
+    width: 150px;
+    text-align: center;
+
+    &--primary {
+    	background: $blue;
+    	color: $white;
+
+    	&:hover {
+	    	color: $blue;
+	    	background: $white;
+	    	border: 2px solid $blue;     		
+    	}
+    }
+
+    &--secondary {
+		background: $gray--bg;
+		color: $black;
+
+		&:hover {
+			color: $blue;
+		}
+    }
+
+    &--add {
+       background: transparent; 
+       border: 2px solid $green;
+       color: $green;
+       height: 36px;
+       width: 26.8%;
+
+       &:hover {
+            color: $white;
+            background: $green;
+       }
+    }
+
+    &--remove {
+       background: transparent; 
+       border: 2px solid $red;
+       color: $red;
+       max-width: 100px;
+
+       &:hover {
+            color: $white;
+            background: $red;
+       }
+    }
+}
+
+.contentbox {
+    background: $white;
+    border-radius: $border-radius;
+    margin: 0 0 24px;
+    padding: 20px;  
+    box-shadow: 0px 0px 22px 10px rgba(230,241,245,0.9);
+}
+
+.innerbox {
+    background: $blue--bg;
+    border-radius: $border-radius;
+    padding: 20px;
+    margin: 0 0 24px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }       
+}
